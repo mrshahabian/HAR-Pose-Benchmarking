@@ -1,0 +1,72 @@
+# YOLO Pose Estimation Benchmark Configuration
+
+# Models to benchmark (YOLO11 pose variants - latest version)
+# Note: Use "yolo11" not "yolov11" (no "v" in YOLO11)
+models:
+  - yolo11n-pose  # Nano - fastest, least accurate
+  - yolo11s-pose  # Small - balanced
+  - yolo11m-pose  # Medium - more accurate, slower
+  - yolov8n-pose # Alternative: YOLOv8-pose (previous stable version)
+  - yolov8s-pose
+  - yolov8m-pose
+
+# Input resolutions to test
+resolutions:
+  - [640, 640]   # Standard resolution
+  - [960, 960]   # Higher resolution
+
+# Inference backends
+backends:
+  - pytorch      # Available on all platforms
+  - tensorrt     # NVIDIA GPU optimization (Jetson, desktop with NVIDIA)
+  - openvino     # CPU optimization (Intel CPUs)
+
+# Video sources to test
+sources:
+  # - type: usb
+  #   device: 1
+  #   name: "USB_Webcam"
+  
+  # - type: rtsp
+  #   url: "rtsp://192.168.1.100:8554/stream"  # Example IP camera
+  #   name: "IP_Camera_RTSP"
+  
+  - type: file
+    path: "data/test_videos/test-video.mp4"
+    loop: true
+    name: "test-video.mp4"
+
+# Benchmark settings
+duration_seconds: 60           # Run each test for 60 seconds
+warmup_frames: 20              # Frames to skip before metrics collection
+confidence_threshold: 0.5      # Minimum confidence for pose detection
+
+# Output settings
+output_dir: "results/benchmarks"
+save_visualizations: true      # Save sample frames with pose overlay
+export_csv: true
+export_json: true
+
+# Ground truth annotations (optional, for accuracy metrics)
+annotations:
+  enabled: false
+  coco_json_path: "data/annotations/keypoints.json"
+  
+# Device-specific settings
+device_settings:
+  # Automatically detect device type
+  auto_detect: true
+  
+  # Jetson-specific
+  jetson:
+    enable_tegrastats: true    # Monitor power consumption
+    power_mode: "MAXN"         # Or "15W", "30W" depending on device
+  
+  # Desktop GPU
+  desktop_gpu:
+    enable_nvml: true          # Use NVIDIA Management Library
+  
+  # CPU-only
+  cpu:
+    num_threads: 4             # OpenCV/OpenVINO threads
+

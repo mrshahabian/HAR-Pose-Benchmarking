@@ -1,0 +1,35 @@
+# Core dependencies
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+pyyaml>=6.0
+pandas>=2.0.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# System monitoring
+psutil>=5.9.0
+pynvml>=11.5.0
+
+# Backend-specific (install based on target platform)
+# PyTorch (usually comes with ultralytics)
+torch>=2.0.0
+torchvision>=0.15.0
+
+# ONNX Runtime (cross-platform)
+onnx>=1.14.0
+onnxruntime>=1.15.0
+onnxruntime-gpu>=1.15.0  # For GPU acceleration
+
+# OpenVINO (CPU optimization, optional)
+# openvino>=2023.0.0  # Uncomment for CPU optimization
+
+# TensorRT (Jetson/NVIDIA, optional)
+# Install separately on Jetson devices
+# nvidia-tensorrt  # Platform-specific
+
+# Additional utilities
+tqdm>=4.65.0
+pillow>=10.0.0
+scipy>=1.10.0
+
