@@ -1,5 +1,57 @@
 # Getting Started with HatH Pipeline
 
+## 🤖 Special Instructions for Jetson Devices
+
+If you're using an **NVIDIA Jetson device** (Nano, Xavier, Orin, etc.), please follow these special instructions:
+
+### Jetson Quick Setup
+
+```bash
+cd /home/reza/Documents/HAR-Pose-Benchmarking
+
+# Use Jetson-specific setup script
+bash scripts/setup_jetson.sh
+```
+
+The Jetson setup script will:
+- Create a virtual environment with `--system-site-packages` flag
+- Use the pre-installed PyTorch with CUDA support
+- Use the Jetson-optimized OpenCV
+- Install only the additional packages needed (ultralytics, pynvml, etc.)
+
+### Why Jetson is Different
+
+Jetson devices come with **pre-optimized PyTorch and CUDA** that's specially built for ARM64 architecture. A standard virtual environment would isolate these packages and break CUDA support. The Jetson setup uses `--system-site-packages` to inherit these optimized packages while keeping project-specific dependencies isolated.
+
+### Verify CUDA is Working
+
+After setup, verify CUDA is accessible in your virtual environment:
+
+```bash
+source venv/bin/activate
+python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+python -c "import torch; print(f'CUDA device: {torch.cuda.get_device_name(0)}')"
+```
+
+You should see:
+```
+CUDA available: True
+CUDA device: Orin (or your device name)
+```
+
+### Troubleshooting Jetson Setup
+
+**Problem:** CUDA not available in venv  
+**Solution:** Make sure you created the venv with `--system-site-packages` flag
+
+**Problem:** `onnxruntime-gpu` installation fails  
+**Solution:** This is expected - GPU version is not available for ARM64. The CPU version is used instead.
+
+**Problem:** Package conflicts  
+**Solution:** Use `requirements-jetson.txt` instead of `requirements.txt`
+
+---
+
 ## 🚀 Quick Start Guide (5 minutes)
 
 ### Step 1: Clone and Setup
@@ -10,6 +62,8 @@ cd /home/reza/Documents/HatHpipeline
 # Quick setup (automated)
 bash scripts/quick_start.sh
 ```
+
+**Note:** The script auto-detects Jetson devices and uses appropriate setup.
 
 ### Step 2: Test Installation
 
@@ -25,7 +79,7 @@ python scripts/test_installation.py
 
 ```bash
 # Download YOLOv11-pose models
-python scripts/download_models.py --models yolov11n-pose
+python scripts/download_models.py --models yolo11n-pose
 ```
 
 ### Step 4: Run Your First Benchmark
@@ -33,7 +87,7 @@ python scripts/download_models.py --models yolov11n-pose
 ```bash
 # Quick 30-second test with USB camera
 python scripts/run_benchmark.py \
-  --models yolov11n-pose \
+  --models yolo11n-pose \
   --backends pytorch \
   --sources usb \
   --device 0 \
@@ -44,7 +98,7 @@ python scripts/run_benchmark.py \
 
 ```bash
 python scripts/run_benchmark.py \
-  --models yolov11n-pose \
+  --models yolo11n-pose \
   --backends pytorch \
   --sources file \
   --file path/to/your/video.mp4 \
@@ -72,7 +126,7 @@ python scripts/visualize_results.py \
 
 ```bash
 python scripts/run_benchmark.py \
-  --models yolov11n-pose yolov11s-pose yolov11m-pose \
+  --models yolo11n-pose yolo11s-pose yolo11m-pose \
   --backends pytorch \
   --duration 60
 ```
@@ -84,7 +138,7 @@ python scripts/run_benchmark.py \
 ```bash
 # Compare PyTorch vs TensorRT (NVIDIA GPU required)
 python scripts/run_benchmark.py \
-  --models yolov11n-pose \
+  --models yolo11n-pose \
   --backends pytorch tensorrt \
   --duration 60
 ```
@@ -95,7 +149,7 @@ python scripts/run_benchmark.py \
 
 ```bash
 python scripts/run_benchmark.py \
-  --models yolov11n-pose \
+  --models yolo11n-pose \
   --resolutions 640x640 960x960 \
   --backends pytorch \
   --duration 60

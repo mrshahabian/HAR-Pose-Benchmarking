@@ -14,6 +14,21 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 cd "$PROJECT_ROOT"
 
+# Detect if running on Jetson device
+IS_JETSON=false
+if [ -f "/etc/nv_tegra_release" ] || uname -a | grep -q "tegra"; then
+    IS_JETSON=true
+    echo "🤖 Jetson device detected!"
+    echo ""
+    echo "This device requires special setup to use system PyTorch with CUDA."
+    echo "Redirecting to Jetson setup script..."
+    echo ""
+    exec bash scripts/setup_jetson.sh
+fi
+
+# Standard setup for non-Jetson devices
+REQUIREMENTS_FILE="requirements.txt"
+
 # Check if virtual environment exists
 if [ ! -d "venv" ]; then
     echo "Creating virtual environment..."
@@ -29,7 +44,7 @@ source venv/bin/activate
 echo ""
 echo "Installing dependencies..."
 pip install --upgrade pip > /dev/null
-pip install -r requirements.txt > /dev/null 2>&1
+pip install -r $REQUIREMENTS_FILE > /dev/null 2>&1
 echo "✓ Dependencies installed"
 
 # Test installation

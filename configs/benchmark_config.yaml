@@ -49,7 +49,7 @@ export_json: true
 
 # Ground truth annotations (optional, for accuracy metrics)
 annotations:
-  enabled: false
+  enabled: true
   coco_json_path: "data/annotations/keypoints.json"
   
 # Device-specific settings

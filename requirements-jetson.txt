@@ -1,0 +1,33 @@
+# Jetson-specific requirements file
+# This file excludes packages that are pre-installed on Jetson devices
+# to allow the virtual environment to use system PyTorch with CUDA support
+
+# IMPORTANT: Constrain NumPy to <2.0 for compatibility with system PyTorch
+# System PyTorch was compiled against NumPy 1.x
+numpy>=1.24.0,<2.0
+
+# Core dependencies that need to be installed
+ultralytics>=8.0.0
+pynvml>=11.5.0
+tqdm>=4.65.0
+pillow>=10.0.0
+
+# ONNX Runtime (CPU version only - GPU version not available for ARM64)
+onnx>=1.14.0
+onnxruntime>=1.15.0
+
+# System packages that will be inherited via --system-site-packages:
+# - torch (Jetson-optimized with CUDA support)
+# - torchvision (Jetson-optimized)
+# - opencv (Jetson-optimized)
+# - numpy
+# - pandas
+# - matplotlib
+# - seaborn
+# - pyyaml
+# - psutil
+# - scipy
+
+# Note: Do NOT install opencv-python as it will conflict with system OpenCV
+# Note: Do NOT install torch/torchvision as system versions have CUDA support
+

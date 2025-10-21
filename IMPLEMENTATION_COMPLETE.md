@@ -164,18 +164,23 @@ HatHpipeline/
 ### Installation (5 minutes)
 
 ```bash
-cd /home/reza/Documents/HatHpipeline
+cd /home/reza/Documents/HAR-Pose-Benchmarking
 
-# Automated setup
+# Automated setup (auto-detects Jetson)
 bash scripts/quick_start.sh
 
-# Or manual
+# Or for Jetson devices specifically
+bash scripts/setup_jetson.sh
+
+# Or manual (non-Jetson)
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 python scripts/download_models.py
 python scripts/test_installation.py
 ```
+
+**🤖 Jetson Support:** The project now includes special setup for NVIDIA Jetson devices (Nano, Xavier, Orin) that preserves CUDA support by using `--system-site-packages`. See `JETSON_SETUP.md` for details.
 
 ### First Benchmark (30 seconds)
 
@@ -204,12 +209,13 @@ python scripts/visualize_results.py \
 | File | Purpose | Lines |
 |------|---------|-------|
 | **README.md** | Complete user guide, installation, usage | 450+ |
-| **GETTING_STARTED.md** | Quick start, common use cases | 500+ |
+| **GETTING_STARTED.md** | Quick start, common use cases, Jetson setup | 500+ |
+| **JETSON_SETUP.md** | Detailed Jetson configuration guide | 350+ |
 | **TECHNICAL_DETAILS.md** | Architecture, metrics, optimization | 400+ |
 | **PROJECT_SUMMARY.md** | Project overview, roadmap | 600+ |
 | **IMPLEMENTATION_COMPLETE.md** | This file - delivery summary | - |
 
-**Total Documentation:** 2000+ lines
+**Total Documentation:** 2300+ lines
 
 ---
 

@@ -40,13 +40,37 @@ HatHpipeline/
 
 ## Installation
 
-### 1. Clone Repository
+### Quick Start
+
+```bash
+cd /home/reza/Documents/HAR-Pose-Benchmarking
+bash scripts/quick_start.sh
+```
+
+The quick start script automatically detects your platform and sets up the environment appropriately.
+
+### 🤖 Jetson Devices (Nano, Xavier, Orin)
+
+**Jetson devices require special setup** to use the pre-installed PyTorch with CUDA support:
+
+```bash
+# Use Jetson-specific setup script
+bash scripts/setup_jetson.sh
+```
+
+This creates a virtual environment with `--system-site-packages` to access Jetson-optimized PyTorch/CUDA while keeping project dependencies isolated.
+
+**See [GETTING_STARTED.md](GETTING_STARTED.md)** for detailed Jetson setup instructions.
+
+### Manual Installation (Non-Jetson)
+
+#### 1. Clone Repository
 
 ```bash
 cd /home/reza/Documents/HatHpipeline
 ```
 
-### 2. Create Virtual Environment
+#### 2. Create Virtual Environment
 
 ```bash
 python3 -m venv venv
@@ -55,7 +79,7 @@ source venv/bin/activate  # Linux/Mac
 .\venv\Scripts\activate   # Windows
 ```
 
-### 3. Install Dependencies
+#### 3. Install Dependencies
 
 ```bash
 # Basic installation (PyTorch backend)
