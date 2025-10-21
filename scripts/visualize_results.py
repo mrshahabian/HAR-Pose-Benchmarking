@@ -24,8 +24,9 @@ def parse_args():
     parser.add_argument(
         '--input', '-i',
         type=str,
+        nargs='+',
         required=True,
-        help='Path to benchmark results JSON file'
+        help='Path(s) to benchmark results JSON file(s)'
     )
     
     parser.add_argument(
@@ -52,14 +53,27 @@ def parse_args():
     return parser.parse_args()
 
 
-def load_results(json_path: str) -> pd.DataFrame:
+def load_results(json_paths) -> pd.DataFrame:
     """Load and flatten benchmark results into DataFrame"""
-    with open(json_path, 'r') as f:
-        results = json.load(f)
+    all_results = []
+    
+    # Handle both single file and multiple files
+    if isinstance(json_paths, str):
+        json_paths = [json_paths]
+    
+    # Load all JSON files
+    for json_path in json_paths:
+        with open(json_path, 'r') as f:
+            data = json.load(f)
+            # Handle both single result and array of results
+            if isinstance(data, list):
+                all_results.extend(data)
+            else:
+                all_results.append(data)
     
     # Flatten nested structure
     flattened = []
-    for result in results:
+    for result in all_results:
         flat = {
             'model': result['model'],
             'backend': result['backend'],
@@ -347,7 +361,12 @@ def main():
     print("="*70)
     print("BENCHMARK VISUALIZATION")
     print("="*70)
-    print(f"Input: {args.input}")
+    if isinstance(args.input, list):
+        print(f"Input files: {len(args.input)} file(s)")
+        for inp in args.input:
+            print(f"  - {inp}")
+    else:
+        print(f"Input: {args.input}")
     print(f"Output: {output_dir}")
     print(f"Format: {args.format}")
     print("="*70 + "\n")

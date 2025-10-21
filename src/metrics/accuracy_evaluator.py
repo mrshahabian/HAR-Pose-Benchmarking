@@ -156,10 +156,12 @@ class AccuracyEvaluator:
             return {
                 'map_keypoint': 0.0,
                 'oks_avg': 0.0,
+                'oks_median': 0.0,
                 'pck_0.5': 0.0,
                 'pck_0.2': 0.0,
                 'num_predictions': len(self.predictions),
-                'num_ground_truth': 0
+                'num_ground_truth': 0,
+                'num_matched': 0
             }
         
         # This is a simplified evaluation
