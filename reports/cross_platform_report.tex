@@ -1,0 +1,104 @@
+% Cross-Platform HAR Pose Benchmarking Report
+% Compile with: pdflatex cross_platform_report.tex (or import to Overleaf)
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{caption}
+
+\title{Cross-Platform Benchmarking of YOLO-based Pose Estimation for HAR}
+\author{HAR-Pose-Benchmarking}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report presents a systematic benchmarking and analysis of YOLO-based pose estimation models and backends across three platforms: a Jetson edge device, a Laptop GPU, and a high-performance Desktop GPU. We evaluate throughput (FPS), latency, resource utilization, and power efficiency across resolutions and backends to quantify trade-offs relevant to Human Activity Recognition (HAR) pipelines.
+\end{abstract}
+
+\section{Methodology}
+\textbf{Benchmarks:} Each benchmark run is defined by a tuple (model, backend, resolution, source). We used the repository's benchmarking pipeline to execute timed runs, collect performance metrics (FPS, latency distribution, dropped frames) and system metrics (CPU/GPU utilization, RAM/VRAM, temperature, power when available).
+
+\textbf{Data Sources:} We aggregated the results into a single CSV (\texttt{results/cross\_platform/All-benchmark\_results.csv}). The analysis script (\texttt{scripts/analyze\_cross\_platform.py}) generates figures and summary tables consumed by this report.
+
+\textbf{Hardware:}
+\begin{itemize}
+  \item Jetson (aarch64, NVIDIA Orin)
+  \item Laptop (NVIDIA RTX A500 Laptop GPU)
+  \item Desktop (NVIDIA GeForce RTX 4090)
+\end{itemize}
+
+\textbf{Metrics:} We report mean FPS, end-to-end latency (ms), CPU/GPU usage, memory footprint, and FPS/Watt (where power data is present).
+
+\section{Results}
+
+\subsection{Throughput (FPS) by Model/Backend}
+Figure~\ref{fig:fps} shows FPS across platforms and resolutions. Desktop achieves the highest throughput, with Jetson benefiting significantly from TensorRT. Laptop sits between Desktop and Jetson as expected.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{../results/cross_platform/visualizations/figures/fps_by_model_backend}
+  \caption{FPS by model/backend faceted by platform and resolution.}
+  \label{fig:fps}
+\end{figure}
+
+\subsection{Latency by Model/Backend}
+Figure~\ref{fig:latency} reports mean end-to-end latency. TensorRT reduces latency substantially on Jetson; PyTorch on Desktop remains performant due to raw compute.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{../results/cross_platform/visualizations/figures/latency_by_model_backend}
+  \caption{Latency (ms) by model/backend faceted by platform and resolution.}
+  \label{fig:latency}
+\end{figure}
+
+\subsection{Power Efficiency}
+When power telemetry is available (primarily on Desktop/Laptop), FPS/Watt provides a useful efficiency comparison (Figure~\ref{fig:power}).
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{../results/cross_platform/visualizations/figures/power_efficiency}
+  \caption{Power efficiency (FPS/Watt) by model/backend, faceted by platform and resolution.}
+  \label{fig:power}
+\end{figure}
+
+\subsection{Resource Utilization}
+Heatmaps summarize CPU, GPU, and memory usage across configurations (Figure~\ref{fig:resource}). These guide deployment constraints and scaling decisions.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{../results/cross_platform/visualizations/figures/resource_sys_cpu_percent_avg}
+  \includegraphics[width=\linewidth]{../results/cross_platform/visualizations/figures/resource_sys_gpu_percent_avg}
+  \includegraphics[width=\linewidth]{../results/cross_platform/visualizations/figures/resource_sys_ram_mb_avg}
+  \includegraphics[width=\linewidth]{../results/cross_platform/visualizations/figures/resource_sys_vram_mb_avg}
+  \caption{Resource utilization heatmaps across platform/resolution/model vs backend.}
+  \label{fig:resource}
+\end{figure}
+
+\section{Summary Tables}
+Top configurations by FPS and lowest latency per platform are listed below. Import the generated CSVs into your main report if needed.
+
+\noindent\textbf{Top-5 FPS per Platform:} \texttt{results/cross\_platform/visualizations/tables/top\_fps\_per\_platform.csv}
+
+\noindent\textbf{Top-5 Lowest Latency per Platform:} \texttt{results/cross\_platform/visualizations/tables/best\_latency\_per\_platform.csv}
+
+\noindent\textbf{Aggregated Summary:} \texttt{results/cross\_platform/visualizations/tables/summary\_by\_platform\_model\_backend.csv}
+
+\section{Discussion}
+Key observations include: (i) TensorRT accelerates Jetson substantially, narrowing the gap for real-time HAR; (ii) increased resolution reduces FPS and increases latency across all platforms, but Desktop remains performant; (iii) efficiency (FPS/Watt) differentiates backends/models on power-constrained devices.
+
+\section{Reproducibility}
+Run the following to regenerate analysis assets:
+\begin{verbatim}
+python scripts/analyze_cross_platform.py \
+  --csv results/cross_platform/All-benchmark_results.csv \
+  --outdir results/cross_platform/visualizations --format png --dpi 300
+\end{verbatim}
+
+\end{document}
+
+
+
